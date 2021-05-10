@@ -19,3 +19,14 @@ models:
             tests:
                 - unique
                 - not_null
+
+
+sources:
+  - name: insta_data_set
+    tables:
+      - name: aisles
+      - name: departments
+      - name: orders
+      - name: products
+      - name: order_products_train
+      - name: order_products_prior
