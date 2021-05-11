@@ -6,12 +6,11 @@ FROM {{source('insta_data_set','order_products_prior')}}
 union distinct
 SELECT *
 FROM {{source('insta_data_set','order_products_train')}}
+ORDER BY 1 , 3
 )
 
 select *
 from source_data
-order by 1, 3
-
 
 {% if is_incremental() %}
 

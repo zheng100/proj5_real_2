@@ -1,6 +1,6 @@
 with user_category AS (
 SELECT a.user_id, c.department_id
-FROM {{source('insta_data_set','orders')}} a, {{ ref('combined_order_products_weekday') }} b, {{source('insta_data_set','products')}} c
+FROM {{source('insta_data_set','orders')}} a, {{ ref('combined_order_products') }} b, {{source('insta_data_set','products')}} c
 WHERE a.order_id = b.order_id AND b.product_id = c.product_id
 )
 
