@@ -56,8 +56,6 @@ models:
         - not_null:
             column_name: "(order_id || '-' || product_id)"
 
-
-
     - name: depart_most_ordered
       description: "A view that captures top 5 department id by total orders in descending order. department_id is the PK."
       columns:
