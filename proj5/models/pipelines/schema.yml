@@ -41,13 +41,26 @@ models:
 
 
     - name: users_categorycount
+      description: "A table that counts the number of category/department items that each user ordered"
       columns:
           - name: user_id
+            description: "check that user_id from users_categorycount feeds into users_topcat"
             tests:
               - relationships:
                   to: ref('users_topcat')
                   field: user_id
 
+    - name: top5_reorder_category
+      description: "A table that contains the top 5 departments/categories with the highest reorder rate"
+      columns:
+          - name: department_id
+            description: "check that the top 5 categories in the top5cat_users table is consistent with the source model"
+            tests:
+              - relationships:
+                  to: ref('top5cat_users')
+                  field: department_id
+
+    
     - name: combined_order_products
       description: "combined product order table that records item level information for all orders. (product_id, order_id) is the PK for the table."
       tests:
