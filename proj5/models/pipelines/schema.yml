@@ -11,16 +11,33 @@ models:
     #             - unique
     #             - not_null
     #
-    # - name: my_second_dbt_model
-    #   description: "A starter dbt model"
-    #   columns:
-    #       - name: id
-    #         description: "The primary key for this table"
-    #         tests:
-    #             - unique
-    #             - not_null
+    - name: order_by_hours
+      description: "A table that captures total orders by hour information. order_hour_of_day is the PK for this table"
+      columns:
+          - name: order_hour_of_day
+            description: "hour of day from [0,23]"
+            tests:
+                - unique
+                - not_null
+          - name: order_hour_of_day
+            tests:
+              - accepted_values:
+                  values: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+                  quote: False
 
-
+    - name: order_by_dow
+      description: "A table that captures total orders by day of week information. order_dow is the PK for this table"
+      columns:
+          - name: order_dow
+            description: "day of week in [0,6]"
+            tests:
+                - unique
+                - not_null
+          - name: order_dow
+            tests:
+              - accepted_values:
+                  values: [0,1,2,3,4,5,6]
+                  quote: False
 
 
     - name: users_categorycount
@@ -32,20 +49,40 @@ models:
                   field: user_id
 
     - name: combined_order_products
-      description: "combined product order table"
+      description: "combined product order table that records item level information for all orders. (product_id, order_id) is the PK for the table."
       tests:
         - unique:
             column_name: "(order_id || '-' || product_id)"
         - not_null:
             column_name: "(order_id || '-' || product_id)"
-        # - accepted_values:
-        #     column_name: order_hour_of_day
-        #     values: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
 
-        # - relationships:
-        #     column_name: ""
-        #       to: ref('customers')
-        #       field: id
+
+
+    - name: depart_most_ordered
+      description: "A view that captures top 5 department id by total orders in descending order. department_id is the PK."
+      columns:
+          - name: department_id
+            tests:
+                - unique
+                - not_null
+      # test to see if count of reorders are non-negative
+      tests:
+        - dbt_utils.expression_is_true:
+            expression: "count_of_reorders >= 0"
+
+    - name: top_5_abs_reordered_depart
+      description: "A table that captures top 5 department information by total orders in descending order. department is the PK."
+      columns:
+          - name: department
+            tests:
+                - unique
+                - not_null
+      # test to see if count of reorders are non-negative
+      tests:
+        - dbt_utils.expression_is_true:
+            expression: "count_of_reorders >= 0"
+
+
 
 
 sources:
